@@ -315,6 +315,15 @@ func hostIsIP(host string) (isIP, isPrivate bool) {
 			return true, true
 		}
 	}
+
+	// 100.64.0.0－100.127.255.255
+	mustip := func(ipstr string) uint32 { a, _ := ip2long(ipstr); return a }
+	privs := []uint32{mustip("100.64.0.0"), mustip("100.127.255.255")}
+	hip := mustip(host)
+	if hip >= privs[0] && hip <= privs[1] {
+		return true, true
+	}
+
 	return true, false
 }
 
